@@ -1,0 +1,164 @@
+<div class="feedback-container">
+  <!-- Success Message -->
+  <div class="success-message" *ngIf="showSuccessMessage">
+    <div class="success-content">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      <span>Thank you for your feedback!</span>
+    </div>
+  </div>
+
+  <!-- Feedback Stats Section -->
+  <div class="stats-section" *ngIf="showStats && totalFeedbacks > 0">
+    <div class="stats-header">
+      <h3>Customer Feedback Overview</h3>
+      <div class="overall-rating">
+        <div class="rating-display">
+          <span class="rating-number">{{ averageRating }}</span>
+          <div class="stars-display">
+            <div class="star" *ngFor="let filled of getStarsArray(Math.round(averageRating))" 
+                 [class.active]="filled">
+              ★
+            </div>
+          </div>
+        </div>
+        <span class="total-reviews">({{ totalFeedbacks }} reviews)</span>
+      </div>
+    </div>
+
+    <!-- Rating Distribution -->
+    <div class="rating-breakdown">
+      <div class="rating-row" *ngFor="let star of [5,4,3,2,1]">
+        <span class="star-label">{{ star }} ★</span>
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getRatingPercentage(star)"></div>
+        </div>
+        <span class="count">{{ ratingDistribution[star] || 0 }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback Form -->
+  <div class="feedback-form-section" *ngIf="showForm">
+    <div class="form-header">
+      <h3>Share Your Feedback</h3>
+      <p>Help us improve by sharing your experience</p>
+    </div>
+
+    <form class="feedback-form" (ngSubmit)="submitFeedback()">
+      <!-- Rating Section -->
+      <div class="form-group">
+        <label class="form-label">Rate your experience *</label>
+        <div class="star-rating">
+          <div class="star" 
+               *ngFor="let star of [1,2,3,4,5]"
+               [class]="getStarClass(star)"
+               (click)="setRating(star)"
+               (mouseenter)="setHoveredStar(star)"
+               (mouseleave)="clearHoveredStar()">
+            ★
+          </div>
+        </div>
+        <div class="rating-labels">
+          <span class="label-left">Poor</span>
+          <span class="label-right">Excellent</span>
+        </div>
+      </div>
+
+      <!-- Category Selection -->
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select [(ngModel)]="category" name="category" class="form-select">
+          <option *ngFor="let cat of categories" [value]="cat.value">
+            {{ cat.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Comment Section -->
+      <div class="form-group">
+        <label class="form-label">Your feedback *</label>
+        <textarea 
+          [(ngModel)]="comment" 
+          name="comment"
+          class="form-textarea" 
+          placeholder="Tell us about your experience..."
+          rows="4"
+          maxlength="500"
+          required>
+        </textarea>
+        <div class="char-count">{{ comment.length }}/500</div>
+      </div>
+
+      <!-- User Info Section -->
+      <div class="form-group">
+        <div class="user-info-section">
+          <div class="checkbox-wrapper">
+            <input 
+              type="checkbox" 
+              id="anonymous" 
+              [(ngModel)]="isAnonymous" 
+              name="anonymous"
+              class="form-checkbox">
+            <label for="anonymous" class="checkbox-label">Submit anonymously</label>
+          </div>
+          
+          <div class="name-input" *ngIf="!isAnonymous">
+            <input 
+              type="text" 
+              [(ngModel)]="userName" 
+              name="userName"
+              class="form-input" 
+              placeholder="Your name (optional)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [disabled]="rating === 0 || comment.trim() === '' || isSubmitting">
+        <span *ngIf="!isSubmitting">Submit Feedback</span>
+        <span *ngIf="isSubmitting">
+          <svg class="spinner" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Submitting...
+        </span>
+      </button>
+    </form>
+  </div>
+
+  <!-- Recent Feedbacks -->
+  <div class="recent-feedbacks" *ngIf="feedbacks.length > 0">
+    <h3>Recent Feedback</h3>
+    <div class="feedback-list">
+      <div class="feedback-item" *ngFor="let feedback of feedbacks.slice(0, 5)">
+        <div class="feedback-header">
+          <div class="user-info">
+            <div class="user-avatar">
+              {{ (feedback.userName || 'Anonymous').charAt(0).toUpperCase() }}
+            </div>
+            <div class="user-details">
+              <span class="user-name">{{ feedback.userName || 'Anonymous' }}</span>
+              <span class="feedback-date">{{ formatDate(feedback.createdAt) }}</span>
+            </div>
+          </div>
+          <div class="feedback-rating">
+            <div class="stars-small">
+              <span class="star small" 
+                    *ngFor="let filled of getStarsArray(feedback.rating)" 
+                    [class.active]="filled">★</span>
+            </div>
+            <span class="category-tag">{{ feedback.category }}</span>
+          </div>
+        </div>
+        <div class="feedback-content">
+          <p>{{ feedback.comment }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

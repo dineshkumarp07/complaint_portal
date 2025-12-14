@@ -1,0 +1,23 @@
+<div class="feedback-page">
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1>Feedback & Reviews</h1>
+        <p>Share your experience and help us improve our services</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="feedback-content">
+    <app-feedback 
+      [showForm]="true" 
+      [showStats]="true"
+      (feedbackSubmitted)="onFeedbackSubmitted($event)">
+    </app-feedback>
+  </div>
+</div>

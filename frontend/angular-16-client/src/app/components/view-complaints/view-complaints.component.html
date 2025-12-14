@@ -1,0 +1,31 @@
+<div class="admin-container">
+  <div class="container">
+  <h2>Complaint List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Student ID</th>
+        <th>Department</th>
+        <th>Complaint</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of complaints">
+        <td>{{ c.name }}</td>
+        <td>{{ c.studentID }}</td>
+        <td>{{ c.department }}</td>
+        <td>{{ c.complaint }}</td>
+        <td>{{ c.status }}</td>
+        <td>
+          <button (click)="editComplaint(c)">Edit</button>
+          <button (click)="resolveComplaint(c._id)">Resolve</button>
+          <button (click)="deleteComplaint(c._id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>

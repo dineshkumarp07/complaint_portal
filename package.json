@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "start": "cd frontend/angular-16-client && npm start"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.1",
+    "mongodb": "^6.18.0",
+    "mongoose": "^8.17.1"
+  }
+}

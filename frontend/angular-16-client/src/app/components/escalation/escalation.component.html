@@ -1,0 +1,408 @@
+<!-- Escalation Header -->
+<div class="escalation-header">
+  <div class="header-content">
+    <div class="header-title">
+      <h1>Escalation Management</h1>
+      <p>Monitor and manage complaint escalations automatically</p>
+    </div>
+    <button class="create-rule-btn" (click)="openCreateRuleModal()">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+      </svg>
+      New Rule
+    </button>
+  </div>
+</div>
+
+<!-- Escalation Stats -->
+<div class="escalation-stats">
+  <div class="stat-card">
+    <div class="stat-icon active">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 13.5L8.5 16 12 18.5 15.5 16 12 13.5z"/>
+      </svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-number">{{ stats.activeEscalations }}</span>
+      <span class="stat-label">Active Escalations</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon resolved">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+      </svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-number">{{ stats.resolvedToday }}</span>
+      <span class="stat-label">Resolved Today</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon time">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+        <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+      </svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-number">{{ stats.avgResolutionTime }}h</span>
+      <span class="stat-label">Avg Resolution</span>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon rate">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+      </svg>
+    </div>
+    <div class="stat-info">
+      <span class="stat-number">{{ stats.escalationRate }}%</span>
+      <span class="stat-label">Escalation Rate</span>
+    </div>
+  </div>
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-navigation">
+  <button class="tab-btn" 
+          [class.active]="selectedTab === 'active'"
+          (click)="selectTab('active')">
+    Active Escalations
+  </button>
+  <button class="tab-btn" 
+          [class.active]="selectedTab === 'rules'"
+          (click)="selectTab('rules')">
+    Escalation Rules
+  </button>
+  <button class="tab-btn" 
+          [class.active]="selectedTab === 'history'"
+          (click)="selectTab('history')">
+    History
+  </button>
+</div>
+
+<!-- Active Escalations Tab -->
+<div class="tab-content" *ngIf="selectedTab === 'active'">
+  <div class="escalations-container">
+    <div class="escalation-card" *ngFor="let escalation of escalations">
+      <div class="escalation-header">
+        <div class="escalation-info">
+          <h3>{{ escalation.complaintTitle }}</h3>
+          <p class="complaint-id">ID: {{ escalation.complaintId }}</p>
+        </div>
+        <div class="escalation-level" [style.background-color]="getLevelColor(escalation.currentLevel)">
+          Level {{ escalation.currentLevel }}
+        </div>
+      </div>
+
+      <div class="escalation-details">
+        <div class="detail-item">
+          <span class="label">Priority:</span>
+          <span class="priority-badge" [style.background-color]="getPriorityColor(escalation.priority)">
+            {{ escalation.priority }}
+          </span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Category:</span>
+          <span>{{ escalation.category }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Age:</span>
+          <span>{{ formatDuration(escalation.ageInHours) }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Next Escalation:</span>
+          <span class="next-escalation">{{ getTimeUntilEscalation(escalation) }}</span>
+        </div>
+      </div>
+
+      <div class="escalation-actions">
+        <button class="view-btn" (click)="viewComplaintDetails(escalation)">
+          View Details
+        </button>
+        <button class="escalate-btn" 
+                (click)="escalateComplaint(escalation.complaintId, escalation.currentLevel + 1)"
+                [disabled]="escalation.currentLevel >= 4">
+          Escalate Now
+        </button>
+        <button class="resolve-btn" (click)="resolveEscalation(escalation.complaintId)">
+          Mark Resolved
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="escalations.length === 0">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+      </svg>
+      <h3>No Active Escalations</h3>
+      <p>All complaints are being handled within normal timeframes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Escalation Rules Tab -->
+<div class="tab-content" *ngIf="selectedTab === 'rules'">
+  <div class="rules-container">
+    <div class="rule-card" *ngFor="let rule of escalationRules">
+      <div class="rule-header">
+        <div class="rule-info">
+          <h3>{{ rule.name }}</h3>
+          <p>{{ rule.description }}</p>
+        </div>
+        <div class="rule-status">
+          <span class="status-badge" [class.active]="rule.isActive" [class.inactive]="!rule.isActive">
+            {{ rule.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="rule-details">
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="label">Trigger:</span>
+            <span>{{ rule.triggerType === 'time_based' ? 'Time Based' : 'Priority Based' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Value:</span>
+            <span>{{ rule.triggerValue }}{{ rule.triggerType === 'time_based' ? 'h' : '' }}</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <span class="label">Priority:</span>
+            <span class="priority-badge" [style.background-color]="getPriorityColor(rule.priority)">
+              {{ rule.priority }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Target Level:</span>
+            <span>Level {{ rule.targetLevel }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-actions">
+        <button class="toggle-btn" (click)="toggleRuleStatus(rule.id)">
+          {{ rule.isActive ? 'Deactivate' : 'Activate' }}
+        </button>
+        <button class="delete-btn" (click)="deleteRule(rule.id)">
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="escalationRules.length === 0">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+      </svg>
+      <h3>No Escalation Rules</h3>
+      <p>Create rules to automatically escalate complaints based on time or priority.</p>
+      <button class="create-rule-btn" (click)="openCreateRuleModal()">Create First Rule</button>
+    </div>
+  </div>
+</div>
+
+<!-- History Tab -->
+<div class="tab-content" *ngIf="selectedTab === 'history'">
+  <div class="history-container">
+    <div class="history-item" *ngFor="let history of escalationHistory">
+      <div class="history-icon" [class]="history.action">
+        <svg viewBox="0 0 24 24" fill="currentColor" *ngIf="history.action === 'escalated'">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 13.5L8.5 16 12 18.5 15.5 16 12 13.5z"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" *ngIf="history.action === 'resolved'">
+          <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+        </svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" *ngIf="history.action === 'created'">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+      </div>
+      <div class="history-content">
+        <div class="history-header">
+          <h4>{{ history.complaintTitle }}</h4>
+          <span class="history-time">{{ formatDate(history.timestamp) }}</span>
+        </div>
+        <p class="history-description">{{ history.description }}</p>
+        <div class="history-meta">
+          <span class="complaint-id">ID: {{ history.complaintId }}</span>
+          <span class="action-type">{{ history.action | titlecase }}</span>
+          <span class="level-info" *ngIf="history.fromLevel && history.toLevel">
+            Level {{ history.fromLevel }} → Level {{ history.toLevel }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="escalationHistory.length === 0">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+      </svg>
+      <h3>No History Available</h3>
+      <p>Escalation history will appear here as actions are taken.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Complaint Details Modal -->
+<div class="modal-overlay" *ngIf="selectedComplaint" (click)="closeComplaintDetails()">
+  <div class="modal-content complaint-details" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Complaint Details</h2>
+      <button class="close-modal-btn" (click)="closeComplaintDetails()">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="complaint-info">
+      <div class="info-section">
+        <h3>{{ selectedComplaint.complaintTitle }}</h3>
+        <p class="complaint-id">ID: {{ selectedComplaint.complaintId }}</p>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="label">Current Level:</span>
+          <span class="escalation-level" [style.background-color]="getLevelColor(selectedComplaint.currentLevel)">
+            Level {{ selectedComplaint.currentLevel }}
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="label">Priority:</span>
+          <span class="priority-badge" [style.background-color]="getPriorityColor(selectedComplaint.priority)">
+            {{ selectedComplaint.priority }}
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="label">Category:</span>
+          <span>{{ selectedComplaint.category }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Age:</span>
+          <span>{{ formatDuration(selectedComplaint.ageInHours) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Next Escalation:</span>
+          <span>{{ getTimeUntilEscalation(selectedComplaint) }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">Assigned To:</span>
+          <span>{{ selectedComplaint.assignedTo || 'Unassigned' }}</span>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="escalate-btn" 
+                (click)="escalateComplaint(selectedComplaint.complaintId, selectedComplaint.currentLevel + 1)"
+                [disabled]="selectedComplaint.currentLevel >= 4">
+          Escalate Now
+        </button>
+        <button class="resolve-btn" (click)="resolveEscalation(selectedComplaint.complaintId)">
+          Mark Resolved
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Rule Modal -->
+<div class="modal-overlay" *ngIf="isCreateRuleModalOpen" (click)="closeCreateRuleModal()">
+  <div class="modal-content create-rule" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Create Escalation Rule</h2>
+      <button class="close-modal-btn" (click)="closeCreateRuleModal()">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+
+    <form class="create-rule-form" (ngSubmit)="createEscalationRule()">
+      <div class="form-group">
+        <label for="ruleName">Rule Name *</label>
+        <input type="text" 
+               id="ruleName"
+               [(ngModel)]="newRule.name" 
+               name="name"
+               placeholder="Enter rule name..."
+               required>
+      </div>
+
+      <div class="form-group">
+        <label for="ruleDescription">Description *</label>
+        <textarea id="ruleDescription"
+                  [(ngModel)]="newRule.description" 
+                  name="description"
+                  placeholder="Describe when this rule should trigger..."
+                  rows="3"
+                  required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="triggerType">Trigger Type</label>
+          <select id="triggerType" [(ngModel)]="newRule.triggerType" name="triggerType">
+            <option value="time_based">Time Based</option>
+            <option value="priority_based">Priority Based</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="triggerValue">Trigger Value</label>
+          <input type="number" 
+                 id="triggerValue"
+                 [(ngModel)]="newRule.triggerValue" 
+                 name="triggerValue"
+                 [placeholder]="newRule.triggerType === 'time_based' ? 'Hours' : 'Priority Level'"
+                 min="1">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rulePriority">Rule Priority</label>
+          <select id="rulePriority" [(ngModel)]="newRule.priority" name="priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="targetLevel">Target Level</label>
+          <select id="targetLevel" [(ngModel)]="newRule.targetLevel" name="targetLevel">
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="4">Level 4</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" [(ngModel)]="newRule.isActive" name="active">
+          <span class="checkmark"></span>
+          Activate rule immediately
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" (click)="closeCreateRuleModal()">Cancel</button>
+        <button type="submit" class="submit-btn" [disabled]="!newRule.name.trim() || !newRule.description.trim()">
+          Create Rule
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

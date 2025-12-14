@@ -1,0 +1,85 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h1>Student Portal</h1>
+        <p>Sign in to submit and track your complaints</p>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <form class="login-form" (ngSubmit)="login()">
+      <div class="form-group">
+        <div class="input-wrapper">
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
+              1.79-4 4 1.79 4 4 4zm0 2c-2.67 
+              0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <input
+            [(ngModel)]="studentID"
+            name="studentID"
+            type="text"
+            placeholder="Student ID"
+            class="form-input"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 
+              3.24 7 6v2H6c-1.1 0-2 .9-2 
+              2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 
+              2-2V10c0-1.1-.9-2-2-2zM9 
+              6c0-1.66 1.34-3 3-3s3 
+              1.34 3 3v2H9V6zm9 14H6V10h12v10z"/>
+            </svg>
+          </div>
+          <input
+            [(ngModel)]="password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            class="form-input"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- ERROR MESSAGE -->
+      <div class="error-message" *ngIf="error">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 
+          2 12s4.48 10 10 10 10-4.48 
+          10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        {{ error }}
+      </div>
+
+      <!-- SIGN IN BUTTON -->
+      <button type="submit" class="login-btn">
+        <span>Sign In</span>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 4l-1.41 1.41L16.17 
+          11H4v2h12.17l-5.58 5.59L12 
+          19l8-8z"/>
+        </svg>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Use your Student ID to access your portal</p>
+    </div>
+  </div>
+</div>

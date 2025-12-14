@@ -1,0 +1,24 @@
+<div class="faculty-page">
+  <div class="page-header">
+    <div class="title-group">
+      <h2>Faculty Members</h2>
+      <div class="count">Total Faculty Members: {{ admins.length }}</div>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <button class="faculty-card" *ngFor="let admin of admins" (click)="onSelect()" title="Login as admin">
+      <div class="avatar">
+        <div class="avatar-circle">{{ getInitials(admin.name) }}</div>
+      </div>
+      <div class="info">
+        <div class="name">{{ admin.name }}</div>
+        <div class="role">{{ admin.designation }}</div>
+      </div>
+    </button>
+  </div>
+</div>
+
+
+
+

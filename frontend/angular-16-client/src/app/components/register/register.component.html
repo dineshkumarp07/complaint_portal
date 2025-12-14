@@ -1,0 +1,473 @@
+<!-- Login Form Section -->
+<div *ngIf="showLoginForm" class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h1>Student Login</h1>
+        <p>Sign in to submit your complaint</p>
+      </div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="login-form" (ngSubmit)="login()">
+      <div class="form-group">
+        <div class="input-wrapper">
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+          <input
+            [(ngModel)]="loginStudentID"
+            name="loginStudentID"
+            type="text"
+            placeholder="Student ID"
+            class="form-input"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-wrapper">
+          <div class="input-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z"/>
+            </svg>
+          </div>
+          <input
+            [(ngModel)]="loginPassword"
+            name="loginPassword"
+            type="password"
+            placeholder="Password"
+            class="form-input"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- ERROR MESSAGE -->
+      <div class="error-message" *ngIf="loginError">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        {{ loginError }}
+      </div>
+
+      <!-- SIGN IN BUTTON -->
+      <button type="submit" class="login-btn">
+        <span>Sign In</span>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 19l8-8z"/>
+        </svg>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>Enter any Student ID and Password to continue</p>
+    </div>
+  </div>
+</div>
+
+<!-- Complaint Form Section -->
+<div *ngIf="!showLoginForm" class="register-container">
+  <!-- Background Animation -->
+  <div class="background-animation">
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <h1 class="hero-title">Submit Your Complaint</h1>
+      <p class="hero-description">
+        Help us improve by reporting issues. Your feedback matters and will be addressed promptly.
+      </p>
+    </div>
+  </div>
+
+  <!-- Registration Form -->
+  <div class="form-section">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>Complaint Registration Form</h2>
+        <p>Please fill in all required fields marked with * to submit your complaint</p>
+      </div>
+
+      <form class="complaint-form" (ngSubmit)="submitComplaint()">
+        <!-- Anonymous Toggle -->
+        <div class="form-group toggle-group">
+          <label class="toggle-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="isAnonymous" 
+              name="isAnonymous"
+              class="toggle-input"
+            />
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Submit as Anonymous</span>
+          </label>
+          <p class="toggle-description">
+            Choose this option if you prefer to remain anonymous
+          </p>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="form-section-group" *ngIf="!isAnonymous">
+          <h3 class="section-title">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Personal Information
+          </h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                </div>
+                <input 
+                  [(ngModel)]="name" 
+                  name="name"
+                  type="text" 
+                  placeholder="Enter your full name" 
+                  class="form-input"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Student ID *</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+                <input 
+                  [(ngModel)]="studentID" 
+                  name="studentID"
+                  type="text" 
+                  placeholder="Enter your student ID" 
+                  class="form-input"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department *</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                  </svg>
+                </div>
+                <select [(ngModel)]="department" name="department" class="form-select" required>
+                  <option value="">-- Select Department --</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Electrical Engineering">Electrical Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Business Administration">Business Administration</option>
+                  <option value="Arts and Sciences">Arts and Sciences</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Contact Number *</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                </div>
+                <input 
+                  [(ngModel)]="contactNumber" 
+                  name="contactNumber"
+                  type="tel" 
+                  placeholder="Enter your contact number" 
+                  class="form-input"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Email Address *</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <input 
+                [(ngModel)]="email" 
+                name="email"
+                type="email" 
+                placeholder="Enter your email address" 
+                class="form-input"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Complaint Details Section -->
+        <div class="form-section-group">
+          <h3 class="section-title">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Complaint Details
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label">Complaint Title *</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                </svg>
+              </div>
+              <input 
+                [(ngModel)]="title" 
+                name="title"
+                type="text" 
+                placeholder="Brief description of the issue" 
+                class="form-input"
+                required
+              />
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                  </svg>
+                </div>
+                <select [(ngModel)]="category" name="category" class="form-select" required>
+                  <option value="">-- Select Complaint Category --</option>
+                  <option value="Cleanliness">Cleanliness</option>
+                  <option value="Electricity">Electricity</option>
+                  <option value="Harassment">Harassment</option>
+                  <option value="Infrastructure">Infrastructure</option>
+                  <option value="Security">Security</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Administrative">Administrative</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Priority Level *</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                </div>
+                <select [(ngModel)]="priorityLevel" name="priorityLevel" class="form-select" required>
+                  <option value="">-- Select Priority Level --</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Urgent">Urgent</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Location of Incident *</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                  <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <input 
+                [(ngModel)]="location" 
+                name="location"
+                type="text" 
+                placeholder="Where did this incident occur?" 
+                class="form-input"
+                required
+              />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Detailed Description *</label>
+            <div class="input-wrapper">
+              <div class="input-icon textarea-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <textarea 
+                [(ngModel)]="complaint" 
+                name="complaint"
+                placeholder="Please provide a detailed description of the incident, including any relevant details that will help us understand and resolve the issue..." 
+                rows="5"
+                class="form-textarea"
+                required
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Information Section -->
+        <div class="form-section-group">
+          <h3 class="section-title">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+            </svg>
+            Additional Information
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label">Witnesses (if any)</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+              </div>
+              <textarea 
+                [(ngModel)]="witnesses" 
+                name="witnesses"
+                placeholder="Were there any witnesses to this incident? If yes, please provide their names or descriptions..." 
+                rows="3"
+                class="form-textarea"
+              ></textarea>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Previous Complaints</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+              </div>
+              <textarea 
+                [(ngModel)]="previousComplaints" 
+                name="previousComplaints"
+                placeholder="Have you reported similar issues before? If yes, please provide details..." 
+                rows="3"
+                class="form-textarea"
+              ></textarea>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Expected Resolution</label>
+            <div class="input-wrapper">
+              <div class="input-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <textarea 
+                [(ngModel)]="expectedResolution" 
+                name="expectedResolution"
+                placeholder="What would you like to see as a resolution to this issue?" 
+                rows="3"
+                class="form-textarea"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="form-section-group">
+          <h3 class="section-title">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10,9 9,9 8,9"/>
+            </svg>
+            Supporting Documents (Optional)
+          </h3>
+          
+          <div class="form-group">
+            <label class="form-label">Upload Supporting Documents</label>
+            <div class="file-upload-wrapper">
+              <input 
+                type="file" 
+                (change)="handleFileInput($event)"
+                class="file-input"
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              />
+              <div class="file-upload-content">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14,2 14,8 20,8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10,9 9,9 8,9"/>
+                </svg>
+                <span>Click to upload or drag and drop</span>
+                <small>PDF, DOC, DOCX, JPG, PNG (Max 5MB)</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" *ngIf="errorMessage">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          <span>Please fill in all required fields marked with *</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn">
+          <span>Submit Complaint</span>
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 19l8-8z"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

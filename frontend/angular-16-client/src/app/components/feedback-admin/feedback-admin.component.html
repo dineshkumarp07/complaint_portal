@@ -1,0 +1,182 @@
+<div class="admin-container">
+  <!-- Header -->
+  <div class="admin-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Feedback Management</h1>
+        <p>Monitor and manage customer feedback</p>
+      </div>
+      <div class="header-actions">
+        <button class="export-btn" (click)="exportFeedbacks()">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+          </svg>
+          Export CSV
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="stats-overview">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ stats.averageRating }}</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ stats.totalFeedbacks }}</div>
+        <div class="stat-label">Total Feedback</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <div class="stat-number">{{ (stats.ratingDistribution[5] || 0) + (stats.ratingDistribution[4] || 0) }}</div>
+        <div class="stat-label">Positive Reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="filters-row">
+      <div class="filter-group">
+        <label>Search</label>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (input)="onFilterChange()"
+          placeholder="Search feedback..."
+          class="filter-input">
+      </div>
+
+      <div class="filter-group">
+        <label>Category</label>
+        <select [(ngModel)]="selectedCategory" (change)="onFilterChange()" class="filter-select">
+          <option *ngFor="let cat of categories" [value]="cat.value">{{ cat.label }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Rating</label>
+        <select [(ngModel)]="selectedRating" (change)="onFilterChange()" class="filter-select">
+          <option value="0">All Ratings</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="filter-select">
+          <option value="date">Date</option>
+          <option value="rating">Rating</option>
+          <option value="name">Name</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Order</label>
+        <select [(ngModel)]="sortOrder" (change)="onFilterChange()" class="filter-select">
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback List -->
+  <div class="feedback-list">
+    <div class="list-header">
+      <h3>Feedback Entries ({{ filteredFeedbacks.length }})</h3>
+    </div>
+
+    <div class="feedback-table">
+      <div class="table-header">
+        <div class="col-date">Date</div>
+        <div class="col-user">User</div>
+        <div class="col-rating">Rating</div>
+        <div class="col-category">Category</div>
+        <div class="col-comment">Comment</div>
+        <div class="col-actions">Actions</div>
+      </div>
+
+      <div class="table-row" *ngFor="let feedback of filteredFeedbacks">
+        <div class="col-date">
+          <span class="date-text">{{ formatDate(feedback.createdAt) }}</span>
+        </div>
+        
+        <div class="col-user">
+          <div class="user-info">
+            <div class="user-avatar">
+              {{ (feedback.userName || 'Anonymous').charAt(0).toUpperCase() }}
+            </div>
+            <span class="user-name">{{ feedback.userName || 'Anonymous' }}</span>
+          </div>
+        </div>
+        
+        <div class="col-rating">
+          <div class="rating-display">
+            <div class="stars">
+              <span class="star" *ngFor="let filled of getStarsArray(feedback.rating)" [class.active]="filled">★</span>
+            </div>
+            <span class="rating-number">{{ feedback.rating }}/5</span>
+          </div>
+        </div>
+        
+        <div class="col-category">
+          <span class="category-badge" [class]="'category-' + feedback.category">
+            {{ feedback.category }}
+          </span>
+        </div>
+        
+        <div class="col-comment">
+          <div class="comment-text" [title]="feedback.comment">
+            {{ feedback.comment.length > 100 ? feedback.comment.substring(0, 100) + '...' : feedback.comment }}
+          </div>
+        </div>
+        
+        <div class="col-actions">
+          <button class="delete-btn" (click)="deleteFeedback(feedback.id!)" title="Delete feedback">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredFeedbacks.length === 0">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17Z"/>
+        </svg>
+      </div>
+      <h3>No feedback found</h3>
+      <p>Try adjusting your filters or search criteria</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* RTL Support */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .nav-link {
+  border-left: none;
+  border-right: 3px solid transparent;
+}
+
+[dir="rtl"] .nav-link:hover,
+[dir="rtl"] .nav-link.active {
+  border-right-color: #3498db;
+  transform: translateX(5px);
+}
+
+[dir="rtl"] .back-button {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .top-right-info {
+  flex-direction: row-reverse;
+}
+
+/* Language-specific fonts */
+[lang="hi"] {
+  font-family: 'Noto Sans Devanagari', 'Segoe UI', sans-serif;
+}
+
+[lang="ar"] {
+  font-family: 'Noto Sans Arabic', 'Segoe UI', sans-serif;
+}
+
+/* Global multi-language support */
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+@import "~bootstrap/dist/css/bootstrap.css";

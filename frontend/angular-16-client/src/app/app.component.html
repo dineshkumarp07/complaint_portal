@@ -1,0 +1,143 @@
+<!-- App Container -->
+<div class="app-container">
+  <!-- Top Navigation Bar -->
+  <nav class="top-navbar" [ngClass]="{'open': isNavOpen}">
+    <div class="nav-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h3>Complaint System</h3>
+          <p>Management Portal</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="nav-menu">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/" routerLinkActive="active" class="nav-link" (click)="closeNav()">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9,22 9,12 15,12 15,22"/>
+              </svg>
+            </div>
+            <span class="nav-text">Home</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/register" routerLinkActive="active" class="nav-link" (click)="closeNav()">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <line x1="20" y1="8" x2="20" y2="14"/>
+                <line x1="23" y1="11" x2="17" y2="11"/>
+              </svg>
+            </div>
+            <span class="nav-text">Register Complaint</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/user-complaints" routerLinkActive="active" class="nav-link" (click)="closeNav()">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14,2 14,8 20,8"/>
+                <line x1="16" y1="13" x2="8" y2="17"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10,9 9,9 8,9"/>
+              </svg>
+            </div>
+            <span class="nav-text">My Complaints</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/admin" routerLinkActive="active" class="nav-link" (click)="closeNav()">
+            <div class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10,17 15,12 10,7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+              </svg>
+            </div>
+            <span class="nav-text">Admin</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="nav-footer">
+      <div class="user-info" *ngIf="loggedInLabel">
+        <div class="user-avatar">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="user-details">
+          <div class="user-name">{{ loggedInLabel }}</div>
+          <div class="user-role">Signed in</div>
+        </div>
+      </div>
+      <button *ngIf="loggedInLabel" class="logout-btn logout-btn--nav" (click)="logout()" title="Logout">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Toggle -->
+  <div class="mobile-menu-toggle" (click)="toggleNav()">
+    <!-- Hamburger icon: three horizontal lines -->
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <rect x="4" y="6" width="16" height="2" rx="1"/>
+      <rect x="4" y="11" width="16" height="2" rx="1"/>
+      <rect x="4" y="16" width="16" height="2" rx="1"/>
+    </svg>
+  </div>
+
+  <!-- Top Back Navigation Bar -->
+  <div class="top-back-navbar">
+    <!-- Home page: only centered app name -->
+    <div *ngIf="isHomePage" class="center-container">
+      <div class="page-title">
+        <span>Student Anonymous Portal</span>
+      </div>
+    </div>
+    <!-- Other pages: back button (left), app name (center), page title (right) -->
+    <div *ngIf="!isHomePage" class="back-nav-container">
+      <button class="back-button" (click)="goHome()">
+        <div class="back-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+        </div>
+        <span class="back-text">Back to Home</span>
+      </button>
+      <div class="page-title">
+        <span>Student Anonymous Portal</span>
+      </div>
+      <div class="top-right-info">
+        <div class="page-section-title">{{ getCurrentPageTitle() }}</div>
+        <div *ngIf="loggedInLabel" class="session-group">
+          <div class="session-badge" title="Current session">{{ loggedInLabel }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="main-content" (click)="onOutsideClick()">
+    <div class="content-wrapper">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" *ngIf="isNavOpen" (click)="closeNav()"></div>
+
+  <!-- Global Chatbot -->
+  <app-chatbot></app-chatbot>
+</div>
